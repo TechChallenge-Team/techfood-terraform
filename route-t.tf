@@ -1,9 +1,9 @@
 resource "aws_route_table" "rt_public" {
-  vpc_id = aws_vpc.vpc_fiap.id
+  vpc_id = aws_vpc.techfood_vpc.id
 
   # since this is exactly the route AWS will create, the route will be adopted
   route {
-    cidr_block = aws_vpc.vpc_fiap.cidr_block
+    cidr_block = aws_vpc.techfood_vpc.cidr_block
     gateway_id = "local"
   }
 

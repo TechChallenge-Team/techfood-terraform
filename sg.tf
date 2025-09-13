@@ -1,7 +1,7 @@
 resource "aws_security_group" "sg" {
     name = "${var.projectName}-sg"
     description = "Usado para expor services na internet"
-    vpc_id = aws_vpc.vpc_fiap.id
+    vpc_id = aws_vpc.techfood_vpc.id
 
     ingress {
         description = "HTTP"
