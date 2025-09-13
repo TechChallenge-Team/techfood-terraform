@@ -1,6 +1,6 @@
 terraform {
   cloud {
-    organization = "soat-tf"
+    organization = "techfood-tf"
 
     workspaces {
       name = "production"
