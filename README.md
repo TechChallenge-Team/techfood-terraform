@@ -1,18 +1,23 @@
-# Guia de Execução no AWS Academy
+# TechFood Terraform Project
 
-## Pré-requisitos
+Este projeto cria a infraestrutura AWS para o TechFood usando Terraform, incluindo um cluster EKS e toda a infraestrutura necessária.
+
+## 📋 Pré-requisitos
 
 ### 1. Terraform instalado
+
 - Baixe e instale: https://www.terraform.io/downloads
 - Verifique: `terraform --version`
 
 ### 2. AWS CLI instalado
+
 - Baixe e instale: https://aws.amazon.com/cli/
 - Verifique: `aws --version`
 
 ## Configuração das Credenciais AWS Academy
 
 ### Passo 1: Obter credenciais do AWS Academy
+
 1. Acesse seu laboratório AWS Academy
 2. Clique em "AWS Details"
 3. Clique em "Show" ao lado de "AWS CLI"
@@ -21,6 +26,7 @@
 ### Passo 2: Configurar as credenciais
 
 #### Opção A: Via arquivo de credenciais (RECOMENDADO)
+
 Crie o arquivo `~/.aws/credentials` (ou `%USERPROFILE%\.aws\credentials` no Windows):
 
 ```ini
@@ -31,7 +37,9 @@ aws_session_token = SEU_SESSION_TOKEN
 ```
 
 #### Opção B: Via variáveis de ambiente
+
 Execute no PowerShell:
+
 ```powershell
 $env:AWS_ACCESS_KEY_ID="SEU_ACCESS_KEY_ID"
 $env:AWS_SECRET_ACCESS_KEY="SEU_SECRET_ACCESS_KEY"
@@ -39,6 +47,7 @@ $env:AWS_SESSION_TOKEN="SEU_SESSION_TOKEN"
 ```
 
 ### Passo 3: Configurar a região
+
 ```powershell
 aws configure set region us-east-1
 ```
@@ -46,29 +55,35 @@ aws configure set region us-east-1
 ## Execução do Projeto
 
 ### 1. Navegue até o diretório do projeto
+
 ```powershell
 cd "c:\Users\lc\Desktop\FIAP\tech-challenge\techfood-terraform"
 ```
 
 ### 2. Inicialize o Terraform
+
 ```powershell
 terraform init
 ```
 
 ### 3. Valide a configuração
+
 ```powershell
 terraform validate
 ```
 
 ### 4. Planeje a execução (opcional)
+
 ```powershell
 terraform plan
 ```
 
 ### 5. Aplique a infraestrutura
+
 ```powershell
 terraform apply
 ```
+
 Digite `yes` quando solicitado.
 
 ## Recursos que serão criados
@@ -100,18 +115,23 @@ terraform destroy
 ## Troubleshooting
 
 ### Erro de credenciais expiradas
+
 As credenciais do AWS Academy expiram em algumas horas. Quando isso acontecer:
+
 1. Renove as credenciais no AWS Academy
 2. Atualize o arquivo `~/.aws/credentials` ou as variáveis de ambiente
 3. Execute novamente os comandos terraform
 
 ### Erro de quota/limites
+
 Se encontrar erros de quota:
+
 1. Verifique os limites da sua conta AWS Academy
 2. Considere usar tipos de instância menores (t2.micro, t3.small)
 3. Reduza o número de nós no cluster
 
 ### Erro de região
+
 Certifique-se de estar usando `us-east-1` que é a região padrão do AWS Academy.
 
 ## Dicas Importantes
