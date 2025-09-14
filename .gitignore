@@ -42,7 +42,6 @@ terraform.rc
 .aws/
 
 # IDE
-.vscode/
 .idea/
 *.swp
 *.swo
