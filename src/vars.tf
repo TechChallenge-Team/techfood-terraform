@@ -12,10 +12,10 @@ variable "cidr_vpc" {
 
 variable "tags" {
   default = {
-    Name = "techfood-terraform",
-    School = "FIAP",
+    Name        = "techfood-terraform",
+    School      = "FIAP",
     Environment = "Production",
-    Year = "2025"
+    Year        = "2025"
   }
 }
 
