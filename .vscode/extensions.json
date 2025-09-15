@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "hashicorp.terraform",
+    "ms-vscode.vscode-json",
+    "redhat.vscode-yaml",
+    "ms-vscode.powershell",
+    "amazonwebservices.aws-toolkit-vscode",
+    "ms-kubernetes-tools.vscode-kubernetes-tools"
+  ]
+}

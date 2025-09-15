@@ -1,0 +1,25 @@
+{
+  "terraform.languageServer": {
+    "enabled": true,
+    "args": ["serve"]
+  },
+  "terraform.experimentalFeatures": {
+    "validateOnSave": true,
+    "prefillRequiredFields": true
+  },
+  "files.associations": {
+    "*.tf": "terraform",
+    "*.tfvars": "terraform-vars"
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.formatDocument.terraform": "explicit"
+  },
+  "[terraform]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file"
+  },
+  "[terraform-vars]": {
+    "editor.formatOnSave": true
+  }
+}
