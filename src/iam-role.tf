@@ -1,16 +1,23 @@
-# Usando roles pré-existentes do AWS Academy
-# No AWS Academy, não temos permissão para criar roles IAM, então usamos as existentes
-# As policy attachments já estão configuradas nas roles do AWS Academy
+# ================================================================================
+# IAM ROLES PARA EKS - AWS ACADEMY
+# ================================================================================
+# No AWS Academy, não temos permissão para criar roles IAM personalizadas.
+# Utilizamos as roles pré-criadas que seguem o padrão do AWS Academy.
+# 
+# Estrutura do nome das roles:
+# - c173096a4485959l11582196t1w767397: ID único do laboratório AWS Academy
+# - LabEksClusterRole / LabEksNodeRole: Função específica da role
+# - Sufixo aleatório: Identificador único gerado pelo CloudFormation
+# ================================================================================
 
-# Para obter os nomes corretos das roles, podemos verificar no console do IAM através do link:
-# https://console.aws.amazon.com/iam/home?region=us-east-1#/roles
-
-data "aws_iam_role" "cluster" {
-  name = "c173096a4485959l11582196t1w767397-LabEksClusterRole-yWlFENQyPCer" # EKS Cluster Role
+# Role para o EKS Control Plane
+data "aws_iam_role" "eks_cluster_role" {
+  name = "c173096a4485959l11582196t1w767397-LabEksClusterRole-yWlFENQyPCer"
 }
 
-data "aws_iam_role" "node" {
-  name = "c173096a4485959l11582196t1w767397785-LabEksNodeRole-Mglan1i62zKz" # EKS Node Group Role
+# Role para os Worker Nodes do EKS
+data "aws_iam_role" "eks_node_group_role" {
+  name = "c173096a4485959l11582196t1w767397785-LabEksNodeRole-Mglan1i62zKz"
 }
 
 # resource "aws_iam_role" "cluster" {
