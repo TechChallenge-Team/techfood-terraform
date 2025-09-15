@@ -5,7 +5,7 @@ resource "aws_eks_cluster" "cluster" {
     authentication_mode = "API"
   }
 
-  role_arn = aws_iam_role.cluster.arn
+  role_arn = data.aws_iam_role.cluster.arn
   version  = "1.31"
 
   vpc_config {
@@ -17,7 +17,8 @@ resource "aws_eks_cluster" "cluster" {
     security_group_ids = [aws_security_group.sg.id]
   }
 
-  depends_on = [
-    aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy,
-  ]
+  # depends_on removido pois usamos roles pré-existentes do AWS Academy
+  # depends_on = [
+  #   aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy,
+  # ]
 }
