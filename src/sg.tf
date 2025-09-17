@@ -1,7 +1,7 @@
 resource "aws_security_group" "sg" {
   name        = "${var.projectName}-sg"
   description = "Usado para expor services na internet"
-  vpc_id      = aws_vpc.techfood_vpc.id
+  vpc_id      = aws_vpc.vpc.id
 
   ingress {
     description = "HTTP"
@@ -21,14 +21,14 @@ resource "aws_security_group" "sg" {
 }
 
 resource "aws_security_group" "efs_sg" {
-  name_prefix = "techfood-efs-"
-  vpc_id      = aws_vpc.techfood_vpc.id
+  name_prefix = "${var.projectName}-efs-"
+  vpc_id      = aws_vpc.vpc.id
 
   ingress {
     from_port   = 2049
     to_port     = 2049
     protocol    = "tcp"
-    cidr_blocks = [aws_vpc.techfood_vpc.cidr_block]
+    cidr_blocks = [aws_vpc.vpc.cidr_block]
   }
 
   egress {
@@ -39,6 +39,31 @@ resource "aws_security_group" "efs_sg" {
   }
 
   tags = {
-    Name = "techfood-efs-sg"
+    Name = "${var.projectName}-efs-sg"
   }
+}
+
+resource "aws_security_group" "rds_sg" {
+  name        = "${var.projectName}-rds-sg"
+  description = "Security group for RDS SQL Server"
+  vpc_id      = aws_vpc.vpc.id
+
+  ingress {
+    from_port       = 1433
+    to_port         = 1433
+    protocol        = "tcp"
+    security_groups = [aws_security_group.sg.id]
+    description     = "SQL Server access from EKS nodes"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(var.tags, {
+    Name = "${var.projectName}-rds-sg"
+  })
 }

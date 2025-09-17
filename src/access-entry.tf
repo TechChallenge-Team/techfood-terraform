@@ -3,7 +3,7 @@
 resource "aws_eks_access_entry" "access_entry" {
   cluster_name      = aws_eks_cluster.cluster.name
   principal_arn     = var.principal_user_arn
-  kubernetes_groups = ["techfood-group"]
+  kubernetes_groups = ["${var.projectName}-group"]
   type              = "STANDARD"
 }
 
