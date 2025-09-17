@@ -22,3 +22,11 @@ variable "tags" {
 variable "instance_type" {
   default = "t3.medium"
 }
+
+variable "principal_user_arn" {
+  default = "arn:aws:iam::767397785535:role/voclabs"
+}
+
+variable "eks_lab_role_arn" {
+  default = "arn:aws:iam::767397785535:role/LabRole"
+}
