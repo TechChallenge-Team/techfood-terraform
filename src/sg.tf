@@ -1,6 +1,6 @@
-resource "aws_security_group" "sg" {
+resource "aws_security_group" "eks_sg" {
   name        = "${var.projectName}-sg"
-  description = "Usado para expor services na internet"
+  description = "Security group for EKS nodes"
   vpc_id      = aws_vpc.vpc.id
 
   ingress {
@@ -52,7 +52,7 @@ resource "aws_security_group" "rds_sg" {
     from_port       = 1433
     to_port         = 1433
     protocol        = "tcp"
-    security_groups = [aws_security_group.sg.id]
+    security_groups = [aws_security_group.rds_sg.id]
     description     = "SQL Server access from EKS nodes"
   }
 

@@ -3,7 +3,7 @@
 # ================================================================================
 resource "aws_api_gateway_rest_api" "api-gateway" {
   name        = "${var.projectName}-api-gateway"
-  description = "API Gateway para o projeto TechFood"
+  description = "API Gateway service"
 
   endpoint_configuration {
     types = ["REGIONAL"]
@@ -143,7 +143,7 @@ resource "aws_api_gateway_integration_response" "health_integration_response" {
 # DEPLOYMENT E STAGE
 # ================================================================================
 
-resource "aws_api_gateway_deployment" "techfood_deployment" {
+resource "aws_api_gateway_deployment" "deployment" {
   rest_api_id = aws_api_gateway_rest_api.api-gateway.id
 
   depends_on = [
@@ -161,7 +161,7 @@ resource "aws_api_gateway_deployment" "techfood_deployment" {
 }
 
 resource "aws_api_gateway_stage" "prod" {
-  deployment_id = aws_api_gateway_deployment.techfood_deployment.id
+  deployment_id = aws_api_gateway_deployment.deployment.id
   rest_api_id   = aws_api_gateway_rest_api.api-gateway.id
   stage_name    = "prod"
 

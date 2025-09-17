@@ -7,7 +7,7 @@
 
 resource "aws_api_gateway_vpc_link" "vpc_link" {
   name        = "${var.projectName}-vpc-link"
-  description = "VPC Link para conectar API Gateway ao EKS cluster"
+  description = "VPC Link to connect API Gateway to NLB"
   target_arns = [aws_lb.nlb.arn]
 
   tags = var.tags
