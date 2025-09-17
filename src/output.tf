@@ -39,17 +39,17 @@ output "eks_cluster_arn" {
 
 output "api_gateway_url" {
   description = "URL base do API Gateway"
-  value       = "https://${aws_api_gateway_rest_api.techfood_api.id}.execute-api.${var.region_default}.amazonaws.com/${aws_api_gateway_stage.prod.stage_name}"
+  value       = "https://${aws_api_gateway_rest_api.techfood.id}.execute-api.${var.region_default}.amazonaws.com/${aws_api_gateway_stage.prod.stage_name}"
 }
 
 output "api_gateway_id" {
   description = "ID do API Gateway"
-  value       = aws_api_gateway_rest_api.techfood_api.id
+  value       = aws_api_gateway_rest_api.techfood.id
 }
 
 output "api_gateway_health_url" {
   description = "URL do health check do API Gateway"
-  value       = "https://${aws_api_gateway_rest_api.techfood_api.id}.execute-api.${var.region_default}.amazonaws.com/${aws_api_gateway_stage.prod.stage_name}/health"
+  value       = "https://${aws_api_gateway_rest_api.techfood.id}.execute-api.${var.region_default}.amazonaws.com/${aws_api_gateway_stage.prod.stage_name}/health"
 }
 
 # ================================================================================
