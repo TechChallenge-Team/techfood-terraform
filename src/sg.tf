@@ -21,7 +21,7 @@ resource "aws_security_group" "eks_sg" {
 }
 
 resource "aws_security_group" "efs_sg" {
-  name_prefix = "${var.projectName}-efs-"
+  name_prefix = "${var.projectName}-efs-sg"
   vpc_id      = aws_vpc.vpc.id
 
   ingress {
@@ -52,7 +52,7 @@ resource "aws_security_group" "rds_sg" {
     from_port       = 1433
     to_port         = 1433
     protocol        = "tcp"
-    security_groups = [aws_security_group.rds_sg.id]
+    security_groups = [aws_security_group.eks_sg.id]
     description     = "SQL Server access from EKS nodes"
   }
 
