@@ -1,11 +1,11 @@
 resource "aws_eks_cluster" "cluster" {
-  name = "eks-${var.projectName}"
+  name = "${var.projectName}-eks"
 
   access_config {
     authentication_mode = "API"
   }
 
-  role_arn = data.aws_iam_role.eks_cluster_role.arn
+  role_arn = var.eks_lab_role_arn
   version  = "1.31"
 
   vpc_config {
@@ -14,7 +14,7 @@ resource "aws_eks_cluster" "cluster" {
       aws_subnet.subnet_public[1].id,
       aws_subnet.subnet_public[2].id
     ]
-    security_group_ids = [aws_security_group.sg.id]
+    security_group_ids = [aws_security_group.eks_sg.id]
   }
 
   # depends_on removido pois usamos roles pré-existentes do AWS Academy

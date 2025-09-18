@@ -1,16 +1,15 @@
 name: Terraform Apply AWS
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch: # permite execução manual
 
 jobs:
-  terraform:
+  deploy:
     runs-on: ubuntu-latest
 
     env:
-      TF_WORKING_DIR: ./
+      TF_WORKING_DIR: ./src
+      AWS_REGION: us-east-1
 
     steps:
       - name: Checkout code
@@ -19,12 +18,13 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Configure AWS credentials
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Terraform Init
         run: terraform init
@@ -39,5 +39,10 @@ jobs:
         working-directory: ${{ env.TF_WORKING_DIR }}
 
       - name: Terraform Apply
+        env:
+          TF_VAR_principal_user_arn: ${{ secrets.AWS_PRINCIPAL_USER_ARN }}
+          TF_VAR_eks_lab_role_arn: ${{ secrets.EKS_LAB_ROLE_ARN }}
+          TF_VAR_rds_password: ${{ secrets.RDS_PASSWORD }}
+          TF_VAR_rds_username: ${{ secrets.RDS_USERNAME }}
         run: terraform apply -auto-approve tfplan
         working-directory: ${{ env.TF_WORKING_DIR }}

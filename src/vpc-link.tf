@@ -5,10 +5,10 @@
 # Conecta o API Gateway ao Network Load Balancer que está na VPC
 # ================================================================================
 
-resource "aws_api_gateway_vpc_link" "techfood_vpc_link" {
+resource "aws_api_gateway_vpc_link" "vpc_link" {
   name        = "${var.projectName}-vpc-link"
-  description = "VPC Link para conectar API Gateway ao EKS cluster"
-  target_arns = [aws_lb.techfood_nlb.arn]
+  description = "VPC Link to connect API Gateway to NLB"
+  target_arns = [aws_lb.nlb.arn]
 
   tags = var.tags
 }
@@ -19,7 +19,7 @@ resource "aws_api_gateway_vpc_link" "techfood_vpc_link" {
 # Network Load Balancer interno para rotear tráfego do API Gateway para o EKS
 # ================================================================================
 
-resource "aws_lb" "techfood_nlb" {
+resource "aws_lb" "nlb" {
   name               = "${var.projectName}-nlb"
   internal           = true
   load_balancer_type = "network"
@@ -35,11 +35,11 @@ resource "aws_lb" "techfood_nlb" {
 }
 
 # Target Group para o NLB
-resource "aws_lb_target_group" "techfood_tg" {
+resource "aws_lb_target_group" "tg" {
   name     = "${var.projectName}-tg"
   port     = 80
   protocol = "TCP"
-  vpc_id   = aws_vpc.techfood_vpc.id
+  vpc_id   = aws_vpc.vpc.id
 
   target_type = "ip"
 
@@ -59,13 +59,13 @@ resource "aws_lb_target_group" "techfood_tg" {
 }
 
 # Listener para o NLB
-resource "aws_lb_listener" "techfood_listener" {
-  load_balancer_arn = aws_lb.techfood_nlb.arn
+resource "aws_lb_listener" "listener" {
+  load_balancer_arn = aws_lb.nlb.arn
   port              = "80"
   protocol          = "TCP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.techfood_tg.arn
+    target_group_arn = aws_lb_target_group.tg.arn
   }
 }
