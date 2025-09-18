@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      TF_WORKING_DIR: ./
+      TF_WORKING_DIR: ./src
       AWS_REGION: us-east-1
 
     steps:
