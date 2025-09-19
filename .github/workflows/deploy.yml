@@ -1,7 +1,7 @@
 name: Terraform Apply AWS
 
 on:
-  workflow_dispatch: # permite execução manual
+  workflow_dispatch:
 
 jobs:
   deploy:
