@@ -26,6 +26,9 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Test
+        run: echo "O ambiente é ${{ vars.EKS_LAB_ROLE_ARN }}"
+        
       - name: Terraform Init
         run: terraform init
         working-directory: ${{ env.TF_WORKING_DIR }}
@@ -40,8 +43,8 @@ jobs:
 
       - name: Terraform Apply
         env:
-          TF_VAR_principal_user_arn: ${{ vars.AWS_PRINCIPAL_USER_ARN }}
-          TF_VAR_eks_lab_role_arn: ${{ vars.EKS_LAB_ROLE_ARN }}
+          TF_VAR_principal_user_arn: ${{ secrets.AWS_PRINCIPAL_USER_ARN }}
+          TF_VAR_eks_lab_role_arn: ${{ secrets.EKS_LAB_ROLE_ARN }}
           TF_VAR_rds_password: ${{ secrets.RDS_PASSWORD }}
           TF_VAR_rds_username: ${{ secrets.RDS_USERNAME }}
         run: terraform apply -auto-approve tfplan
