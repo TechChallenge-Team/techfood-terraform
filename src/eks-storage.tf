@@ -18,6 +18,12 @@ resource "aws_efs_mount_target" "efs_mt" {
 }
 
 resource "kubernetes_storage_class_v1" "efs_sc" {
+  depends_on = [
+    aws_eks_cluster.cluster,
+    aws_eks_node_group.node_group,
+    aws_efs_mount_target.efs_mt
+  ]
+
   metadata {
     name = "efs-sc"
     labels = {
