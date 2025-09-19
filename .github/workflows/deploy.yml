@@ -40,9 +40,9 @@ jobs:
 
       - name: Terraform Apply
         env:
-          # TF_VAR_principal_user_arn: ${{ vars.AWS_PRINCIPAL_USER_ARN }}
-          # TF_VAR_eks_lab_role_arn: ${{ vars.EKS_LAB_ROLE_ARN }}
-          TF_VAR_rds_password: ${{ secrets.RDS_PASSWORD }}
+          TF_VAR_principal_user_arn: ${{ vars.AWS_PRINCIPAL_USER_ARN }}
+          TF_VAR_eks_lab_role_arn: ${{ vars.EKS_LAB_ROLE_ARN }}
           TF_VAR_rds_username: ${{ secrets.RDS_USERNAME }}
+          TF_VAR_rds_password: ${{ secrets.RDS_PASSWORD }}
         run: terraform apply -auto-approve tfplan
         working-directory: ${{ env.TF_WORKING_DIR }}

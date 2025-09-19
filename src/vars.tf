@@ -3,11 +3,11 @@ variable "projectName" {
 }
 
 variable "principal_user_arn" {
-  default = "arn:aws:iam::767397785535:role/voclabs"
+  description = "The ARN of the principal user"
 }
 
 variable "eks_lab_role_arn" {
-  default = "arn:aws:iam::767397785535:role/LabRole"
+  description = "The ARN of the EKS lab role"
 }
 
 variable "region_default" {
@@ -49,13 +49,11 @@ variable "rds_max_allocated_storage" {
 
 variable "rds_username" {
   description = "Username for the master DB user"
-  default     = "admin"
   sensitive   = true
 }
 
 variable "rds_password" {
   description = "Password for the master DB user"
-  default     = "TechFood123!"
   sensitive   = true
 }
 
