@@ -48,12 +48,22 @@ resource "aws_security_group" "rds_sg" {
   description = "Security group for RDS SQL Server"
   vpc_id      = aws_vpc.vpc.id
 
+  # Acesso interno do EKS
   ingress {
     from_port       = 1433
     to_port         = 1433
     protocol        = "tcp"
     security_groups = [aws_security_group.eks_sg.id]
     description     = "SQL Server access from EKS nodes"
+  }
+
+  # Acesso externo (da internet)
+  ingress {
+    from_port   = 1433
+    to_port     = 1433
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "SQL Server access from internet"
   }
 
   egress {
