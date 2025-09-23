@@ -17,7 +17,8 @@ resource "aws_efs_mount_target" "efs_mt" {
   security_groups = [aws_security_group.efs_sg.id]
 }
 
-resource "kubernetes_storage_class_v1" "efs_sc" {
+# PV estático para EFS (não requer CSI driver permissions)
+resource "kubernetes_persistent_volume" "techfood_efs_pv" {
   depends_on = [
     aws_eks_cluster.cluster,
     aws_eks_node_group.node_group,
@@ -25,25 +26,50 @@ resource "kubernetes_storage_class_v1" "efs_sc" {
   ]
 
   metadata {
-    name = "efs-sc"
-    labels = {
-      "app.kubernetes.io/name"      = "efs-storageclass"
-      "app.kubernetes.io/component" = "storage"
-      "app.kubernetes.io/part-of"   = "${var.projectName}-system"
+    name = "techfood-efs-pv"
+  }
+  
+  spec {
+    capacity = {
+      storage = "5Gi"
+    }
+    
+    access_modes = ["ReadWriteMany"]
+    persistent_volume_reclaim_policy = "Retain"
+    
+    persistent_volume_source {
+      nfs {
+        path   = "/"
+        server = aws_efs_file_system.efs.dns_name
+      }
     }
   }
+}
 
-  storage_provisioner    = "efs.csi.aws.com"
-  reclaim_policy         = "Retain"
-  volume_binding_mode    = "Immediate"
-  allow_volume_expansion = true
-
-  parameters = {
-    provisioningMode = "efs-ap"
-    fileSystemId     = aws_efs_file_system.efs.id
-    directoryPerms   = "0755"
-    gidRangeStart    = "1000"
-    gidRangeEnd      = "2000"
-    basePath         = "/dynamic_provisioning"
+# PVC para aplicação usando PV estático
+resource "kubernetes_persistent_volume_claim" "techfood_images_pvc" {
+  depends_on = [
+    kubernetes_persistent_volume.techfood_efs_pv
+  ]
+  
+  metadata {
+    name      = "techfood-images-pvc"
+    namespace = "techfood"
+    labels = {
+      "app.kubernetes.io/name"      = "techfood-api"
+      "app.kubernetes.io/component" = "storage"
+      "app.kubernetes.io/part-of"   = "techfood-system"
+    }
+  }
+  
+  spec {
+    access_modes = ["ReadWriteMany"]
+    volume_name  = kubernetes_persistent_volume.techfood_efs_pv.metadata[0].name
+    
+    resources {
+      requests = {
+        storage = "5Gi"
+      }
+    }
   }
 }
