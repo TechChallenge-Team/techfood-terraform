@@ -54,7 +54,6 @@ resource "kubernetes_persistent_volume_claim" "images_pvc" {
 
   metadata {
     name      = "${var.projectName}-images-pvc"
-    namespace = var.projectName
     labels = {
       "app.kubernetes.io/name"      = "${var.projectName}-api"
       "app.kubernetes.io/component" = "storage"
