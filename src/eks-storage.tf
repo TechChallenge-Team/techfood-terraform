@@ -54,7 +54,6 @@ resource "kubernetes_persistent_volume_claim" "techfood_images_pvc" {
   
   metadata {
     name      = "techfood-images-pvc"
-    namespace = "techfood"
     labels = {
       "app.kubernetes.io/name"      = "techfood-api"
       "app.kubernetes.io/component" = "storage"
