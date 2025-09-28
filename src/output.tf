@@ -66,6 +66,16 @@ output "nlb_arn" {
   value       = aws_lb.nlb.arn
 }
 
+output "efs_file_system_id" {
+  description = "ID do EFS para usar em PersistentVolumes"
+  value = aws_efs_file_system.efs.id
+}
+
+output "efs_dns_name" {
+  description = "DNS do EFS para configuração de PV"
+  value = aws_efs_file_system.efs.dns_name
+}
+
 # ================================================================================
 # OUTPUTS DO RDS SQL SERVER
 # ================================================================================
