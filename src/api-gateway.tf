@@ -19,13 +19,6 @@ resource "aws_api_gateway_resource" "api_resource" {
   path_part   = "api"
 }
 
-# Recurso para health check (/health)
-resource "aws_api_gateway_resource" "health_resource" {
-  rest_api_id = aws_api_gateway_rest_api.api-gateway.id
-  parent_id   = aws_api_gateway_rest_api.api-gateway.root_resource_id
-  path_part   = "health"
-}
-
 # Proxy resource para capturar todas as rotas (/api/{proxy+})
 resource "aws_api_gateway_resource" "proxy_resource" {
   rest_api_id = aws_api_gateway_rest_api.api-gateway.id
@@ -36,14 +29,6 @@ resource "aws_api_gateway_resource" "proxy_resource" {
 # ================================================================================
 # MÉTODOS DO API GATEWAY
 # ================================================================================
-
-# Método GET para health check
-resource "aws_api_gateway_method" "health_get" {
-  rest_api_id   = aws_api_gateway_rest_api.api-gateway.id
-  resource_id   = aws_api_gateway_resource.health_resource.id
-  http_method   = "GET"
-  authorization = "NONE"
-}
 
 # Método ANY para o proxy (captura todos os métodos HTTP)
 resource "aws_api_gateway_method" "proxy_any" {
@@ -68,19 +53,6 @@ resource "aws_api_gateway_method" "api_any" {
 # ================================================================================
 # INTEGRAÇÕES DO API GATEWAY
 # ================================================================================
-
-# Integração do health check (mock response)
-resource "aws_api_gateway_integration" "health_integration" {
-  rest_api_id = aws_api_gateway_rest_api.api-gateway.id
-  resource_id = aws_api_gateway_resource.health_resource.id
-  http_method = aws_api_gateway_method.health_get.http_method
-
-  type = "MOCK"
-
-  request_templates = {
-    "application/json" = "{\"statusCode\": 200}"
-  }
-}
 
 # Integração do proxy via VPC Link (conecta com o EKS)
 resource "aws_api_gateway_integration" "proxy_integration" {
@@ -112,32 +84,6 @@ resource "aws_api_gateway_integration" "api_integration" {
   connection_id           = aws_api_gateway_vpc_link.vpc_link.id
 }
 
-# ================================================================================
-# RESPONSES DO API GATEWAY
-# ================================================================================
-
-# Response para health check
-resource "aws_api_gateway_method_response" "health_response" {
-  rest_api_id = aws_api_gateway_rest_api.api-gateway.id
-  resource_id = aws_api_gateway_resource.health_resource.id
-  http_method = aws_api_gateway_method.health_get.http_method
-  status_code = "200"
-
-  response_models = {
-    "application/json" = "Empty"
-  }
-}
-
-resource "aws_api_gateway_integration_response" "health_integration_response" {
-  rest_api_id = aws_api_gateway_rest_api.api-gateway.id
-  resource_id = aws_api_gateway_resource.health_resource.id
-  http_method = aws_api_gateway_method.health_get.http_method
-  status_code = aws_api_gateway_method_response.health_response.status_code
-
-  response_templates = {
-    "application/json" = "{\"status\": \"healthy\", \"service\": \"techfood-api\"}"
-  }
-}
 
 # ================================================================================
 # DEPLOYMENT E STAGE
@@ -147,10 +93,8 @@ resource "aws_api_gateway_deployment" "deployment" {
   rest_api_id = aws_api_gateway_rest_api.api-gateway.id
 
   depends_on = [
-    aws_api_gateway_method.health_get,
     aws_api_gateway_method.proxy_any,
     aws_api_gateway_method.api_any,
-    aws_api_gateway_integration.health_integration,
     aws_api_gateway_integration.proxy_integration,
     aws_api_gateway_integration.api_integration,
   ]
