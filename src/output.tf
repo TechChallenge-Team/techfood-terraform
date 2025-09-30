@@ -73,12 +73,12 @@ output "nlb_target_group_arn" {
 
 output "efs_file_system_id" {
   description = "ID do EFS para usar em PersistentVolumes"
-  value = aws_efs_file_system.efs.id
+  value       = aws_efs_file_system.efs.id
 }
 
 output "efs_dns_name" {
   description = "DNS do EFS para configuração de PV"
-  value = aws_efs_file_system.efs.dns_name
+  value       = aws_efs_file_system.efs.dns_name
 }
 
 # ================================================================================
@@ -88,7 +88,6 @@ output "efs_dns_name" {
 output "rds_endpoint" {
   description = "RDS SQL Server endpoint"
   value       = aws_db_instance.sqlserver.endpoint
-  sensitive   = true
 }
 
 output "rds_identifier" {
