@@ -66,6 +66,11 @@ output "nlb_arn" {
   value       = aws_lb.nlb.arn
 }
 
+output "nlb_target_group_arn" {
+  description = "Target Group ARN - Use this in NGINX Ingress Controller annotation"
+  value       = aws_lb_target_group.tg.arn
+}
+
 output "efs_file_system_id" {
   description = "ID do EFS para usar em PersistentVolumes"
   value = aws_efs_file_system.efs.id
