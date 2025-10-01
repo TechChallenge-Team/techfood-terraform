@@ -45,3 +45,9 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
         working-directory: ${{ env.TF_WORKING_DIR }}
+
+      - name: Export Terraform outputs
+        run: terraform output -json > outputs.json
+
+      - name: Upload outputs.json to S3
+        run: aws s3 cp outputs.json s3://techfood-bucket/terraform/outputs.json
