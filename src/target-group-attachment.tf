@@ -37,16 +37,3 @@ resource "aws_lb_target_group_attachment" "eks_nodes" {
     create_before_destroy = true
   }
 }
-
-# ================================================================================
-# OUTPUT PARA VERIFICAÇÃO
-# ================================================================================
-output "registered_worker_node_ids" {
-  description = "IDs dos worker nodes registrados no Target Group"
-  value       = data.aws_instances.eks_nodes.ids
-}
-
-output "registered_worker_node_ips" {
-  description = "IPs privados dos worker nodes registrados"
-  value       = data.aws_instances.eks_nodes.private_ips
-}
