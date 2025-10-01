@@ -105,3 +105,16 @@ output "rds_username" {
   value       = aws_db_instance.sqlserver.username
   sensitive   = true
 }
+
+# ================================================================================
+# OUTPUT PARA VERIFICAÇÃO
+# ================================================================================
+output "registered_worker_node_ids" {
+  description = "IDs dos worker nodes registrados no Target Group"
+  value       = data.aws_instances.eks_nodes.ids
+}
+
+output "registered_worker_node_ips" {
+  description = "IPs privados dos worker nodes registrados"
+  value       = data.aws_instances.eks_nodes.private_ips
+}
