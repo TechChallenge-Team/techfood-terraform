@@ -129,3 +129,22 @@ output "nlb_target_group_health" {
     unhealthy_threshold = aws_lb_target_group.tg.health_check[0].unhealthy_threshold
   }
 }
+
+# ================================================================================
+# OUTPUTS DOS SECURITY GROUPS
+# ================================================================================
+
+output "eks_security_group_id" {
+  description = "ID do Security Group do EKS (cluster e nodes)"
+  value       = aws_security_group.eks_sg.id
+}
+
+output "rds_security_group_id" {
+  description = "ID do Security Group do RDS"
+  value       = aws_security_group.rds_sg.id
+}
+
+output "efs_security_group_id" {
+  description = "ID do Security Group do EFS"
+  value       = aws_security_group.efs_sg.id
+}
