@@ -107,14 +107,25 @@ output "rds_username" {
 }
 
 # ================================================================================
-# OUTPUT PARA VERIFICAÇÃO
+# OUTPUT PARA VERIFICAÇÃO DO AUTO SCALING GROUP E TARGET GROUP
 # ================================================================================
-output "registered_worker_node_ids" {
-  description = "IDs dos worker nodes registrados no Target Group"
-  value       = data.aws_instances.eks_nodes.ids
+output "eks_autoscaling_group_name" {
+  description = "Nome do Auto Scaling Group dos worker nodes do EKS"
+  value       = try(data.aws_autoscaling_groups.eks_node_groups.names[0], "N/A")
 }
 
-output "registered_worker_node_ips" {
-  description = "IPs privados dos worker nodes registrados"
-  value       = data.aws_instances.eks_nodes.private_ips
+output "target_group_arn" {
+  description = "ARN do Target Group anexado ao Auto Scaling Group"
+  value       = aws_lb_target_group.tg.arn
+}
+
+output "nlb_target_group_health" {
+  description = "Configuração de health check do Target Group"
+  value = {
+    protocol            = aws_lb_target_group.tg.health_check[0].protocol
+    port                = aws_lb_target_group.tg.health_check[0].port
+    path                = aws_lb_target_group.tg.health_check[0].path
+    healthy_threshold   = aws_lb_target_group.tg.health_check[0].healthy_threshold
+    unhealthy_threshold = aws_lb_target_group.tg.health_check[0].unhealthy_threshold
+  }
 }
