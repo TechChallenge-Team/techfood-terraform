@@ -9,7 +9,9 @@ resource "aws_api_gateway_rest_api" "api-gateway" {
     types = ["REGIONAL"]
   }
 
-  tags = var.tags
+  tags = merge(var.tags, {
+    Name = "${var.projectName}-api-gateway"
+  })
 }
 
 # Recurso principal da API (/api)
@@ -109,5 +111,7 @@ resource "aws_api_gateway_stage" "prod" {
   rest_api_id   = aws_api_gateway_rest_api.api-gateway.id
   stage_name    = "prod"
 
-  tags = var.tags
+  tags = merge(var.tags, {
+    Name = "${var.projectName}-api-gateway-stage"
+  })
 }

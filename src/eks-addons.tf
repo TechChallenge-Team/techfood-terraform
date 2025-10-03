@@ -12,7 +12,9 @@ resource "aws_eks_addon" "ebs_csi_driver" {
   
   depends_on = [aws_eks_node_group.node_group]
 
-  tags = var.tags
+  tags = merge(var.tags, {
+    Name = "${var.projectName}-ebs-csi-driver"
+  })
 }
 
 # EFS CSI Driver - Para usar EFS como storage (melhor para AWS Academy)
@@ -22,7 +24,9 @@ resource "aws_eks_addon" "efs_csi_driver" {
   
   depends_on = [aws_eks_node_group.node_group]
 
-  tags = var.tags
+  tags = merge(var.tags, {
+    Name = "${var.projectName}-efs-csi-driver"
+  })
 }
 
 # CoreDNS addon (já incluído por padrão, mas vamos gerenciar explicitamente)
@@ -33,7 +37,9 @@ resource "aws_eks_addon" "coredns" {
   
   depends_on = [aws_eks_node_group.node_group]
 
-  tags = var.tags
+  tags = merge(var.tags, {
+    Name = "${var.projectName}-coredns"
+  })
 }
 
 # VPC CNI addon
@@ -44,7 +50,9 @@ resource "aws_eks_addon" "vpc_cni" {
   
   depends_on = [aws_eks_node_group.node_group]
 
-  tags = var.tags
+  tags = merge(var.tags, {
+    Name = "${var.projectName}-vpc-cni"
+  })
 }
 
 # Kube-proxy addon
@@ -55,5 +63,7 @@ resource "aws_eks_addon" "kube_proxy" {
   
   depends_on = [aws_eks_node_group.node_group]
 
-  tags = var.tags
+  tags = merge(var.tags, {
+    Name = "${var.projectName}-kube-proxy"
+  })
 }

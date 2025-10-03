@@ -10,7 +10,9 @@ resource "aws_api_gateway_vpc_link" "vpc_link" {
   description = "VPC Link to connect API Gateway to NLB"
   target_arns = [aws_lb.nlb.arn]
 
-  tags = var.tags
+  tags = merge(var.tags, {
+    Name = "${var.projectName}-vpc-link"
+  })
 }
 
 # ================================================================================
@@ -27,7 +29,9 @@ resource "aws_lb" "nlb" {
 
   enable_deletion_protection = false
 
-  tags = var.tags
+  tags = merge(var.tags, {
+    Name = "${var.projectName}-nlb"
+  })
 }
 
 # Target Group para o NLB
@@ -51,7 +55,9 @@ resource "aws_lb_target_group" "tg" {
     unhealthy_threshold = 2
   }
 
-  tags = var.tags
+  tags = merge(var.tags, {
+    Name = "${var.projectName}-tg"
+  })
 }
 
 # Listener para o NLB
