@@ -1,5 +1,5 @@
 resource "aws_security_group" "eks_sg" {
-  name        = "${var.projectName}-sg"
+  name        = "${var.projectName}-eks-sg"
   description = "Security group for EKS cluster and nodes"
   vpc_id      = aws_vpc.vpc.id
 
