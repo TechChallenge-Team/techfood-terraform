@@ -23,7 +23,7 @@ resource "aws_lb" "nlb" {
   name               = "${var.projectName}-nlb"
   internal           = true
   load_balancer_type = "network"
-  subnets = [for subnet in aws_subnet.subnet_public : subnet.id]
+  subnets = [for subnet in aws_subnet.public_subnet : subnet.id]
 
   enable_deletion_protection = false
 

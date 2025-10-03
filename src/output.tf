@@ -7,11 +7,11 @@ output "vpc_id" {
 }
 
 output "subnet_cidr" {
-  value = aws_subnet.subnet_public[*].cidr_block
+  value = aws_subnet.public_subnet[*].cidr_block
 }
 
 output "subnet_id" {
-  value = aws_subnet.subnet_public[*].id
+  value = aws_subnet.public_subnet[*].id
 }
 
 # ================================================================================

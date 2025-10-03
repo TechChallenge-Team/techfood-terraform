@@ -11,9 +11,9 @@ resource "aws_efs_file_system" "efs" {
 }
 
 resource "aws_efs_mount_target" "efs_mt" {
-  count           = length(aws_subnet.subnet_public)
+  count           = length(aws_subnet.public_subnet)
   file_system_id  = aws_efs_file_system.efs.id
-  subnet_id       = aws_subnet.subnet_public[count.index].id
+  subnet_id       = aws_subnet.public_subnet[count.index].id
   security_groups = [aws_security_group.efs_sg.id]
 }
 
