@@ -16,11 +16,6 @@ resource "aws_eks_node_group" "node_group" {
     max_unavailable = 1
   }
 
-  # Usar o mesmo security group do cluster
-  remote_access {
-    source_security_group_ids = [aws_security_group.eks_sg.id]
-  }
-
   # depends_on removido pois usamos roles pré-existentes do AWS Academy com policies já anexadas
   # depends_on = [
   #   aws_iam_role_policy_attachment.node-AmazonEKSWorkerNodePolicy,
