@@ -46,4 +46,4 @@ jobs:
         run: terraform output -json > outputs.json
         
       - name: Upload outputs.json to S3
-        run: aws s3 cp outputs.json s3://techfood/terraform/outputs.json
+        run: aws s3 cp outputs.json s3://techfood-bucket/terraform/outputs.json
