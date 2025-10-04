@@ -4,19 +4,6 @@
 # Addons essenciais para o funcionamento do cluster EKS
 # ================================================================================
 
-# EBS CSI Driver - Necessário para PersistentVolumes EBS
-# Versão simplificada para AWS Academy (sem IAM roles customizadas)
-resource "aws_eks_addon" "ebs_csi_driver" {
-  cluster_name = aws_eks_cluster.cluster.name
-  addon_name   = "aws-ebs-csi-driver"
-  
-  depends_on = [aws_eks_node_group.node_group]
-
-  tags = merge(var.tags, {
-    Name = "${var.projectName}-ebs-csi-driver"
-  })
-}
-
 # EFS CSI Driver - Para usar EFS como storage (melhor para AWS Academy)
 resource "aws_eks_addon" "efs_csi_driver" {
   cluster_name = aws_eks_cluster.cluster.name

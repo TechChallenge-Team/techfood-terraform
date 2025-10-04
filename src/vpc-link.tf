@@ -37,7 +37,7 @@ resource "aws_lb" "nlb" {
 # Target Group para o NLB
 resource "aws_lb_target_group" "tg" {
   name     = "${var.projectName}-tg"
-  port     = 80
+  port     = 30080
   protocol = "TCP"
   vpc_id   = aws_vpc.vpc.id
 
@@ -47,11 +47,10 @@ resource "aws_lb_target_group" "tg" {
     enabled             = true
     healthy_threshold   = 2
     interval            = 30
-    matcher             = "200"
     path                = "/api/health"
-    port                = "traffic-port"
+    port                = "30080"
     protocol            = "HTTP"
-    timeout             = 5
+    timeout             = 10
     unhealthy_threshold = 2
   }
 
