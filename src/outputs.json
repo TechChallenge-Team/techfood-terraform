@@ -1,0 +1,159 @@
+{
+  "api_gateway_health_url": {
+    "sensitive": false,
+    "type": "string",
+    "value": "https://vikrpis2nd.execute-api.us-east-1.amazonaws.com/prod/health"
+  },
+  "api_gateway_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "vikrpis2nd"
+  },
+  "api_gateway_url": {
+    "sensitive": false,
+    "type": "string",
+    "value": "https://vikrpis2nd.execute-api.us-east-1.amazonaws.com/prod"
+  },
+  "auth_api_invoke_url": {
+    "sensitive": false,
+    "type": "string",
+    "value": "https://vikrpis2nd.execute-api.us-east-1.amazonaws.com/prod/v1/authentication/signin"
+  },
+  "auth_bucket_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "techfood-lambda-artifacts-471112638163-us-east-1"
+  },
+  "auth_lambda_function_arn": {
+    "sensitive": false,
+    "type": "string",
+    "value": "arn:aws:lambda:us-east-1:471112638163:function:TechFoodAuthenticationLambda"
+  },
+  "auth_lambda_function_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "TechFoodAuthenticationLambda"
+  },
+  "efs_dns_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "fs-06c20238ef4d00bbf.efs.us-east-1.amazonaws.com"
+  },
+  "efs_file_system_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "fs-06c20238ef4d00bbf"
+  },
+  "efs_security_group_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "sg-01488f8b0d7fb3b4a"
+  },
+  "eks_autoscaling_group_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "eks-techfood-nodeg-dcccd69d-223d-8cd5-b95e-4c9efa0dd46f"
+  },
+  "eks_cluster_arn": {
+    "sensitive": false,
+    "type": "string",
+    "value": "arn:aws:eks:us-east-1:471112638163:cluster/techfood-eks"
+  },
+  "eks_cluster_endpoint": {
+    "sensitive": false,
+    "type": "string",
+    "value": "https://FA6127B4E69AC2A8E57C4007F427C937.gr7.us-east-1.eks.amazonaws.com"
+  },
+  "eks_cluster_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "techfood-eks"
+  },
+  "eks_security_group_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "sg-0e93229933d773832"
+  },
+  "nlb_arn": {
+    "sensitive": false,
+    "type": "string",
+    "value": "arn:aws:elasticloadbalancing:us-east-1:471112638163:loadbalancer/net/techfood-nlb/b10c1612d927ce1e"
+  },
+  "nlb_dns_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "techfood-nlb-b10c1612d927ce1e.elb.us-east-1.amazonaws.com"
+  },
+  "nlb_target_group_arn": {
+    "sensitive": false,
+    "type": "string",
+    "value": "arn:aws:elasticloadbalancing:us-east-1:471112638163:targetgroup/techfood-tg/174a6225f089789f"
+  },
+  "nlb_target_group_health": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "healthy_threshold": "number",
+        "path": "string",
+        "port": "string",
+        "protocol": "string",
+        "unhealthy_threshold": "number"
+      }
+    ],
+    "value": {
+      "healthy_threshold": 2,
+      "path": "/api/health",
+      "port": "30080",
+      "protocol": "HTTP",
+      "unhealthy_threshold": 2
+    }
+  },
+  "subnet_cidr": {
+    "sensitive": false,
+    "type": [
+      "tuple",
+      [
+        "string",
+        "string",
+        "string"
+      ]
+    ],
+    "value": [
+      "10.0.0.0/20",
+      "10.0.16.0/20",
+      "10.0.32.0/20"
+    ]
+  },
+  "subnet_id": {
+    "sensitive": false,
+    "type": [
+      "tuple",
+      [
+        "string",
+        "string",
+        "string"
+      ]
+    ],
+    "value": [
+      "subnet-07fab02cf3372c840",
+      "subnet-0cba1f7f6db8add39",
+      "subnet-056a464e354a6db58"
+    ]
+  },
+  "target_group_arn": {
+    "sensitive": false,
+    "type": "string",
+    "value": "arn:aws:elasticloadbalancing:us-east-1:471112638163:targetgroup/techfood-tg/174a6225f089789f"
+  },
+  "vpc_cidr": {
+    "sensitive": false,
+    "type": "string",
+    "value": "10.0.0.0/16"
+  },
+  "vpc_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "vpc-0257e019f33540cc2"
+  }
+}
