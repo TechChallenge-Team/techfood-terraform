@@ -1,6 +1,6 @@
     terraform {
       backend "s3" {
-        bucket         = "techfood-tf-bucket"
+        bucket         = "techfood-terraform-bucket"
         key            = "terraform.tfstate"
         region         = "us-east-1"
         encrypt        = true
