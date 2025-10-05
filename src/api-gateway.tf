@@ -34,7 +34,7 @@ resource "aws_apigatewayv2_integration" "eks_integration" {
   integration_uri    = aws_lb_listener.alb_listener.arn
   
   connection_type = "VPC_LINK"
-  connection_id   = aws_apigatewayv2_vpc_link.vpc_link_v2.id
+  connection_id   = aws_apigatewayv2_vpc_link.vpc_link.id
 
   request_parameters = {
     "overwrite:path" = "$request.path"
