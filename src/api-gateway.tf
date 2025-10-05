@@ -60,18 +60,6 @@ resource "aws_apigatewayv2_route" "default_route" {
 }
 
 # ================================================================================
-# PERMISSÃO LAMBDA
-# ================================================================================
-# resource "aws_lambda_permission" "api_gateway_invoke_auth" {
-#   statement_id  = "AllowAPIGatewayInvoke"
-#   action        = "lambda:InvokeFunction"
-#   function_name = var.lambda_function_name
-#   principal     = "apigateway.amazonaws.com"
-  
-#   source_arn = "${aws_apigatewayv2_api.api_gateway.execution_arn}/*/*"
-# }
-
-# ================================================================================
 # STAGE
 # ================================================================================
 resource "aws_apigatewayv2_stage" "prod" {
