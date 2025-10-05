@@ -1,9 +1,9 @@
-#resource "aws_s3_bucket" "bucket-backend" {
+#resource "aws_s3_bucket" "bucket_backend" {
 #  bucket = var.projectName
 #  tags   = var.tags
 #}
 
-resource "aws_s3_bucket" "lambda_artifacts" {
+resource "aws_s3_bucket" "lambda_artifacts_bucket" {
   bucket        = "${var.projectName}-lambda-artifacts-bucket"
   force_destroy = true
 

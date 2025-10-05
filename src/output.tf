@@ -138,7 +138,7 @@ output "auth_api_invoke_url" {
   description = "Public invoke URL for the Authentication endpoint (stage prod)"
 }
 
-output "auth_bucket_name" {
-  value       = aws_s3_bucket.lambda_artifacts.id
+output "auth_lambda_artifacts_bucket_name" {
+  value       = aws_s3_bucket.lambda_artifacts_bucket.id
   description = "S3 bucket where the CI pipeline should upload the Lambda package"
 }
