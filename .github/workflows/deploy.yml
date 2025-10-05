@@ -14,6 +14,7 @@ jobs:
       AWS_REGION: us-east-1
       TF_VAR_principal_user_arn: ${{ vars.AWS_PRINCIPAL_USER_ARN }}
       TF_VAR_eks_lab_role_arn: ${{ vars.EKS_LAB_ROLE_ARN }}
+      TF_VAR_lambda_function_name: ${{ vars.AUTH_FUNCTION_NAME }}
 
     steps:
       - name: Checkout code
