@@ -39,36 +39,36 @@ output "eks_cluster_arn" {
 
 output "api_gateway_url" {
   description = "API Gateway base URL"
-  value       = "https://${aws_api_gateway_rest_api.api-gateway.id}.execute-api.${var.region_default}.amazonaws.com/${aws_api_gateway_stage.prod.stage_name}"
+  value       = aws_apigatewayv2_stage.prod.invoke_url
 }
 
 output "api_gateway_id" {
   description = "API Gateway ID"
-  value       = aws_api_gateway_rest_api.api-gateway.id
+  value       = aws_apigatewayv2_api.api_gateway.id
 }
 
 output "api_gateway_health_url" {
   description = "API Gateway health check URL"
-  value       = "https://${aws_api_gateway_rest_api.api-gateway.id}.execute-api.${var.region_default}.amazonaws.com/${aws_api_gateway_stage.prod.stage_name}/health"
+  value       = "${aws_apigatewayv2_stage.prod.invoke_url}/health"
 }
 
 # ================================================================================
 # OUTPUTS DO LOAD BALANCER
 # ================================================================================
 
-output "nlb_dns_name" {
+output "alb_dns_name" {
   description = "Network Load Balancer DNS name"
-  value       = aws_lb.nlb.dns_name
+  value       = aws_lb.alb.dns_name
 }
 
-output "nlb_arn" {
+output "alb_arn" {
   description = "Network Load Balancer ARN"
-  value       = aws_lb.nlb.arn
+  value       = aws_lb.alb.arn
 }
 
-output "nlb_target_group_arn" {
+output "alb_target_group_arn" {
   description = "Target Group ARN - Use this in NGINX Ingress Controller annotation"
-  value       = aws_lb_target_group.tg.arn
+  value       = aws_lb_target_group.alb_tg.arn
 }
 
 output "efs_file_system_id" {
@@ -91,17 +91,17 @@ output "eks_autoscaling_group_name" {
 
 output "target_group_arn" {
   description = "ARN do Target Group anexado ao Auto Scaling Group"
-  value       = aws_lb_target_group.tg.arn
+  value       = aws_lb_target_group.alb_tg.arn
 }
 
-output "nlb_target_group_health" {
+output "alb_target_group_health" {
   description = "Configuração de health check do Target Group"
   value = {
-    protocol            = aws_lb_target_group.tg.health_check[0].protocol
-    port                = aws_lb_target_group.tg.health_check[0].port
-    path                = aws_lb_target_group.tg.health_check[0].path
-    healthy_threshold   = aws_lb_target_group.tg.health_check[0].healthy_threshold
-    unhealthy_threshold = aws_lb_target_group.tg.health_check[0].unhealthy_threshold
+    protocol            = aws_lb_target_group.alb_tg.health_check[0].protocol
+    port                = aws_lb_target_group.alb_tg.health_check[0].port
+    path                = aws_lb_target_group.alb_tg.health_check[0].path
+    healthy_threshold   = aws_lb_target_group.alb_tg.health_check[0].healthy_threshold
+    unhealthy_threshold = aws_lb_target_group.alb_tg.health_check[0].unhealthy_threshold
   }
 }
 
@@ -134,8 +134,8 @@ output "auth_lambda_function_arn" {
 }
 
 output "auth_api_invoke_url" {
-  value = "https://${aws_api_gateway_rest_api.api-gateway.id}.execute-api.${var.region_default}.amazonaws.com/prod/auth"
-  description = "Public invoke URL for the Authentication endpoint (stage prod)"
+  value = "${aws_apigatewayv2_stage.prod.invoke_url}/auth"
+  description = "Public invoke URL for the Authentication endpoint"
 }
 
 output "auth_lambda_artifacts_bucket_name" {
