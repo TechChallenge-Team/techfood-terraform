@@ -35,7 +35,6 @@ variable "tags" {
 variable "lambda_function_name" {
   type        = string
   description = "Name of the Lambda function that the CI/CD pipeline will deploy."
-  default     = "Authentication"
 }
 
 variable "lambda_handler" {
