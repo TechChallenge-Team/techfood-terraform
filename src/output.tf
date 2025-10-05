@@ -118,3 +118,27 @@ output "efs_security_group_id" {
   description = "ID do Security Group do EFS"
   value       = aws_security_group.efs_sg.id
 }
+
+# ================================================================================
+# OUTPUTS DA LAMBDA DE AUTENTICAÇÃO
+# ================================================================================
+
+output "auth_lambda_function_name" {
+  value = var.lambda_function_name
+  description = "Lambda function name that the pipeline should deploy to"
+}
+
+output "auth_lambda_function_arn" {
+  value = "arn:aws:lambda:${var.region_default}:${data.aws_caller_identity.current.account_id}:function:${var.lambda_function_name}"
+  description = "Full ARN for the Lambda function (useful in CI/CD)"
+}
+
+output "auth_api_invoke_url" {
+  value = "https://${aws_api_gateway_rest_api.api-gateway.id}.execute-api.${var.region_default}.amazonaws.com/prod/auth"
+  description = "Public invoke URL for the Authentication endpoint (stage prod)"
+}
+
+output "auth_bucket_name" {
+  value       = aws_s3_bucket.lambda_artifacts.id
+  description = "S3 bucket where the CI pipeline should upload the Lambda package"
+}

@@ -30,3 +30,31 @@ variable "tags" {
     Year        = "2025"
   }
 }
+
+# Variables for the Lambda function deployed by the CI/CD pipeline
+variable "lambda_function_name" {
+  type        = string
+  description = "Name of the Lambda function that the CI/CD pipeline will deploy."
+  default     = "Authentication"
+}
+
+variable "lambda_handler" {
+  type        = string
+  default     = "TechFood.Authentication"
+  description = "The Lambda handler. Kept for reference; deployment pipeline uses its own settings."
+}
+
+variable "lambda_runtime" {
+  type    = string
+  default = "dotnet8"
+}
+
+variable "lambda_memory_size" {
+  type    = number
+  default = 512
+}
+
+variable "lambda_timeout" {
+  type    = number
+  default = 30
+}

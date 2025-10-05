@@ -14,17 +14,18 @@ resource "aws_api_gateway_rest_api" "api-gateway" {
   })
 }
 
-# Recurso principal da API (/api)
-resource "aws_api_gateway_resource" "api_resource" {
+# Recurso para autenticação (/auth)
+resource "aws_api_gateway_resource" "auth" {
   rest_api_id = aws_api_gateway_rest_api.api-gateway.id
   parent_id   = aws_api_gateway_rest_api.api-gateway.root_resource_id
-  path_part   = "api"
+  path_part   = "auth"
 }
 
-# Proxy resource para capturar todas as rotas (/api/{proxy+})
+# Proxy resource para capturar todas as outras rotas (/{proxy+})
+# Isso captura tudo exceto /auth que já está definido acima
 resource "aws_api_gateway_resource" "proxy_resource" {
   rest_api_id = aws_api_gateway_rest_api.api-gateway.id
-  parent_id   = aws_api_gateway_resource.api_resource.id
+  parent_id   = aws_api_gateway_rest_api.api-gateway.root_resource_id
   path_part   = "{proxy+}"
 }
 
@@ -32,7 +33,15 @@ resource "aws_api_gateway_resource" "proxy_resource" {
 # MÉTODOS DO API GATEWAY
 # ================================================================================
 
-# Método ANY para o proxy (captura todos os métodos HTTP)
+# Método ANY para o recurso /auth (Lambda)
+resource "aws_api_gateway_method" "auth_any" {
+  rest_api_id   = aws_api_gateway_rest_api.api-gateway.id
+  resource_id   = aws_api_gateway_resource.auth.id
+  http_method   = "ANY"
+  authorization = "NONE"
+}
+
+# Método ANY para o proxy (captura todos os métodos HTTP e direciona para EKS)
 resource "aws_api_gateway_method" "proxy_any" {
   rest_api_id   = aws_api_gateway_rest_api.api-gateway.id
   resource_id   = aws_api_gateway_resource.proxy_resource.id
@@ -44,17 +53,22 @@ resource "aws_api_gateway_method" "proxy_any" {
   }
 }
 
-# Método ANY para o recurso /api
-resource "aws_api_gateway_method" "api_any" {
-  rest_api_id   = aws_api_gateway_rest_api.api-gateway.id
-  resource_id   = aws_api_gateway_resource.api_resource.id
-  http_method   = "ANY"
-  authorization = "NONE"
-}
-
 # ================================================================================
 # INTEGRAÇÕES DO API GATEWAY
 # ================================================================================
+
+# Integração do recurso /auth com a Lambda de autenticação
+resource "aws_api_gateway_integration" "auth_integration" {
+  rest_api_id = aws_api_gateway_rest_api.api-gateway.id
+  resource_id = aws_api_gateway_resource.auth.id
+  http_method = aws_api_gateway_method.auth_any.http_method
+
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  # Use the Lambda function ARN constructed from account/region/name so the
+  # pipeline can create/update the function outside Terraform.
+  uri = "arn:aws:apigateway:${var.region_default}:lambda:path/2015-03-31/functions/arn:aws:lambda:${var.region_default}:${data.aws_caller_identity.current.account_id}:function:${var.lambda_function_name}/invocations"
+}
 
 # Integração do proxy via VPC Link (conecta com o EKS)
 resource "aws_api_gateway_integration" "proxy_integration" {
@@ -73,20 +87,6 @@ resource "aws_api_gateway_integration" "proxy_integration" {
   }
 }
 
-# Integração do recurso /api via VPC Link
-resource "aws_api_gateway_integration" "api_integration" {
-  rest_api_id = aws_api_gateway_rest_api.api-gateway.id
-  resource_id = aws_api_gateway_resource.api_resource.id
-  http_method = aws_api_gateway_method.api_any.http_method
-
-  type                    = "HTTP_PROXY"
-  integration_http_method = "ANY"
-  uri                     = "http://${aws_lb.nlb.dns_name}/"
-  connection_type         = "VPC_LINK"
-  connection_id           = aws_api_gateway_vpc_link.vpc_link.id
-}
-
-
 # ================================================================================
 # DEPLOYMENT E STAGE
 # ================================================================================
@@ -95,10 +95,10 @@ resource "aws_api_gateway_deployment" "deployment" {
   rest_api_id = aws_api_gateway_rest_api.api-gateway.id
 
   depends_on = [
+    aws_api_gateway_method.auth_any,
     aws_api_gateway_method.proxy_any,
-    aws_api_gateway_method.api_any,
+    aws_api_gateway_integration.auth_integration,
     aws_api_gateway_integration.proxy_integration,
-    aws_api_gateway_integration.api_integration,
   ]
 
   lifecycle {
