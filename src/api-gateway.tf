@@ -1,169 +1,73 @@
 # ================================================================================
-# API GATEWAY - REST API
+# API GATEWAY - HTTP API (v2)
 # ================================================================================
-resource "aws_api_gateway_rest_api" "api-gateway" {
-  name        = "${var.projectName}-api-gateway"
-  description = "API Gateway service"
+resource "aws_apigatewayv2_api" "api_gateway" {
+  name          = "${var.projectName}-api-gateway"
+  protocol_type = "HTTP"
+  description   = "API Gateway service"
 
-  endpoint_configuration {
-    types = ["REGIONAL"]
-  }
-
-  tags = var.tags
-}
-
-# Recurso principal da API (/api)
-resource "aws_api_gateway_resource" "api_resource" {
-  rest_api_id = aws_api_gateway_rest_api.api-gateway.id
-  parent_id   = aws_api_gateway_rest_api.api-gateway.root_resource_id
-  path_part   = "api"
-}
-
-# Recurso para health check (/health)
-resource "aws_api_gateway_resource" "health_resource" {
-  rest_api_id = aws_api_gateway_rest_api.api-gateway.id
-  parent_id   = aws_api_gateway_rest_api.api-gateway.root_resource_id
-  path_part   = "health"
-}
-
-# Proxy resource para capturar todas as rotas (/api/{proxy+})
-resource "aws_api_gateway_resource" "proxy_resource" {
-  rest_api_id = aws_api_gateway_rest_api.api-gateway.id
-  parent_id   = aws_api_gateway_resource.api_resource.id
-  path_part   = "{proxy+}"
+  tags = merge(var.tags, {
+    Name = "${var.projectName}-api-gateway"
+  })
 }
 
 # ================================================================================
-# MÉTODOS DO API GATEWAY
+# INTEGRAÇÃO COM LAMBDA (rotas /auth/*)
 # ================================================================================
+resource "aws_apigatewayv2_integration" "lambda_integration" {
+  api_id = aws_apigatewayv2_api.api_gateway.id
 
-# Método GET para health check
-resource "aws_api_gateway_method" "health_get" {
-  rest_api_id   = aws_api_gateway_rest_api.api-gateway.id
-  resource_id   = aws_api_gateway_resource.health_resource.id
-  http_method   = "GET"
-  authorization = "NONE"
+  integration_type = "AWS_PROXY"
+  integration_uri  = "arn:aws:lambda:${var.region_default}:${data.aws_caller_identity.current.account_id}:function:${var.lambda_function_name}"
+  
+  payload_format_version = "2.0"
 }
 
-# Método ANY para o proxy (captura todos os métodos HTTP)
-resource "aws_api_gateway_method" "proxy_any" {
-  rest_api_id   = aws_api_gateway_rest_api.api-gateway.id
-  resource_id   = aws_api_gateway_resource.proxy_resource.id
-  http_method   = "ANY"
-  authorization = "NONE"
+# ================================================================================
+# INTEGRAÇÃO COM EKS via VPC LINK (todas as outras rotas)
+# ================================================================================
+resource "aws_apigatewayv2_integration" "eks_integration" {
+  api_id = aws_apigatewayv2_api.api_gateway.id
+
+  integration_type   = "HTTP_PROXY"
+  integration_method = "ANY"
+  integration_uri    = aws_lb_listener.alb_listener.arn
+  
+  connection_type = "VPC_LINK"
+  connection_id   = aws_apigatewayv2_vpc_link.vpc_link.id
 
   request_parameters = {
-    "method.request.path.proxy" = true
-  }
-}
-
-# Método ANY para o recurso /api
-resource "aws_api_gateway_method" "api_any" {
-  rest_api_id   = aws_api_gateway_rest_api.api-gateway.id
-  resource_id   = aws_api_gateway_resource.api_resource.id
-  http_method   = "ANY"
-  authorization = "NONE"
-}
-
-# ================================================================================
-# INTEGRAÇÕES DO API GATEWAY
-# ================================================================================
-
-# Integração do health check (mock response)
-resource "aws_api_gateway_integration" "health_integration" {
-  rest_api_id = aws_api_gateway_rest_api.api-gateway.id
-  resource_id = aws_api_gateway_resource.health_resource.id
-  http_method = aws_api_gateway_method.health_get.http_method
-
-  type = "MOCK"
-
-  request_templates = {
-    "application/json" = "{\"statusCode\": 200}"
-  }
-}
-
-# Integração do proxy via VPC Link (conecta com o EKS)
-resource "aws_api_gateway_integration" "proxy_integration" {
-  rest_api_id = aws_api_gateway_rest_api.api-gateway.id
-  resource_id = aws_api_gateway_resource.proxy_resource.id
-  http_method = aws_api_gateway_method.proxy_any.http_method
-
-  type                    = "HTTP_PROXY"
-  integration_http_method = "ANY"
-  uri                     = "http://${aws_lb.nlb.dns_name}/{proxy}"
-  connection_type         = "VPC_LINK"
-  connection_id           = aws_api_gateway_vpc_link.vpc_link.id
-
-  request_parameters = {
-    "integration.request.path.proxy" = "method.request.path.proxy"
-  }
-}
-
-# Integração do recurso /api via VPC Link
-resource "aws_api_gateway_integration" "api_integration" {
-  rest_api_id = aws_api_gateway_rest_api.api-gateway.id
-  resource_id = aws_api_gateway_resource.api_resource.id
-  http_method = aws_api_gateway_method.api_any.http_method
-
-  type                    = "HTTP_PROXY"
-  integration_http_method = "ANY"
-  uri                     = "http://${aws_lb.nlb.dns_name}/"
-  connection_type         = "VPC_LINK"
-  connection_id           = aws_api_gateway_vpc_link.vpc_link.id
-}
-
-# ================================================================================
-# RESPONSES DO API GATEWAY
-# ================================================================================
-
-# Response para health check
-resource "aws_api_gateway_method_response" "health_response" {
-  rest_api_id = aws_api_gateway_rest_api.api-gateway.id
-  resource_id = aws_api_gateway_resource.health_resource.id
-  http_method = aws_api_gateway_method.health_get.http_method
-  status_code = "200"
-
-  response_models = {
-    "application/json" = "Empty"
-  }
-}
-
-resource "aws_api_gateway_integration_response" "health_integration_response" {
-  rest_api_id = aws_api_gateway_rest_api.api-gateway.id
-  resource_id = aws_api_gateway_resource.health_resource.id
-  http_method = aws_api_gateway_method.health_get.http_method
-  status_code = aws_api_gateway_method_response.health_response.status_code
-
-  response_templates = {
-    "application/json" = "{\"status\": \"healthy\", \"service\": \"techfood-api\"}"
+    "overwrite:path" = "$request.path"
   }
 }
 
 # ================================================================================
-# DEPLOYMENT E STAGE
+# ROTAS
 # ================================================================================
 
-resource "aws_api_gateway_deployment" "deployment" {
-  rest_api_id = aws_api_gateway_rest_api.api-gateway.id
-
-  depends_on = [
-    aws_api_gateway_method.health_get,
-    aws_api_gateway_method.proxy_any,
-    aws_api_gateway_method.api_any,
-    aws_api_gateway_integration.health_integration,
-    aws_api_gateway_integration.proxy_integration,
-    aws_api_gateway_integration.api_integration,
-  ]
-
-  lifecycle {
-    create_before_destroy = true
-  }
+# Rota para autenticação (Lambda)
+resource "aws_apigatewayv2_route" "auth_route" {
+  api_id    = aws_apigatewayv2_api.api_gateway.id
+  route_key = "ANY /auth/{proxy+}"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
-resource "aws_api_gateway_stage" "prod" {
-  deployment_id = aws_api_gateway_deployment.deployment.id
-  rest_api_id   = aws_api_gateway_rest_api.api-gateway.id
-  stage_name    = "prod"
+# Rota padrão para EKS (captura todas as outras rotas)
+resource "aws_apigatewayv2_route" "default_route" {
+  api_id    = aws_apigatewayv2_api.api_gateway.id
+  route_key = "ANY /{proxy+}"
+  target    = "integrations/${aws_apigatewayv2_integration.eks_integration.id}"
+}
 
-  tags = var.tags
+# ================================================================================
+# STAGE
+# ================================================================================
+resource "aws_apigatewayv2_stage" "prod" {
+  api_id      = aws_apigatewayv2_api.api_gateway.id
+  name        = "$default"
+  auto_deploy = true
+
+  tags = merge(var.tags, {
+    Name = "${var.projectName}-api-gateway-stage"
+  })
 }

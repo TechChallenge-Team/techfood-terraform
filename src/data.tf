@@ -5,3 +5,5 @@ data "aws_eks_cluster" "cluster" {
 data "aws_eks_cluster_auth" "auth" {
   name = aws_eks_cluster.cluster.name
 }
+
+data "aws_caller_identity" "current" {}

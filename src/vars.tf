@@ -3,11 +3,11 @@ variable "projectName" {
 }
 
 variable "principal_user_arn" {
-  default = "arn:aws:iam::767397785535:role/voclabs"
+  description = "The ARN of the principal user"
 }
 
 variable "eks_lab_role_arn" {
-  default = "arn:aws:iam::767397785535:role/LabRole"
+  description = "The ARN of the EKS lab role"
 }
 
 variable "region_default" {
@@ -31,40 +31,29 @@ variable "tags" {
   }
 }
 
-# RDS SQL Server variables
-variable "rds_instance_class" {
-  description = "The instance type of the RDS instance"
-  default     = "db.t3.micro" # Free tier eligible for AWS Academy
+# Variables for the Lambda function deployed by the CI/CD pipeline
+variable "lambda_function_name" {
+  type        = string
+  description = "Name of the Lambda function that the CI/CD pipeline will deploy."
 }
 
-variable "rds_allocated_storage" {
-  description = "The allocated storage in gibibytes"
-  default     = 20
+variable "lambda_handler" {
+  type        = string
+  default     = "TechFood.Authentication"
+  description = "The Lambda handler. Kept for reference; deployment pipeline uses its own settings."
 }
 
-variable "rds_max_allocated_storage" {
-  description = "The upper limit for automatic storage scaling"
-  default     = 50
+variable "lambda_runtime" {
+  type    = string
+  default = "dotnet8"
 }
 
-variable "rds_username" {
-  description = "Username for the master DB user"
-  default     = "admin"
-  sensitive   = true
+variable "lambda_memory_size" {
+  type    = number
+  default = 512
 }
 
-variable "rds_password" {
-  description = "Password for the master DB user"
-  default     = "TechFood123!"
-  sensitive   = true
-}
-
-variable "rds_publicly_accessible" {
-  description = "Bool to control if instance is publicly accessible"
-  default     = true
-}
-
-variable "rds_backup_retention_period" {
-  description = "The days to retain backups for"
-  default     = 7
+variable "lambda_timeout" {
+  type    = number
+  default = 30
 }
