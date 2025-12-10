@@ -182,3 +182,18 @@ output "rabbitmq_host" {
   description = "Host do RabbitMQ para configuração no Kubernetes"
   value       = aws_mq_broker.rabbitmq.instances[0].ip_address
 }
+
+output "rabbitmq_port" {
+  description = "Porta AMQP do RabbitMQ"
+  value       = "5672"
+}
+
+output "rabbitmq_port_tls" {
+  description = "Porta AMQPS do RabbitMQ (com TLS)"
+  value       = "5671"
+}
+
+output "rabbitmq_management_port" {
+  description = "Porta do console de gerenciamento do RabbitMQ"
+  value       = "15672"
+}
