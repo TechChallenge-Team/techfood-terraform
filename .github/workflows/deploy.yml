@@ -15,6 +15,8 @@ jobs:
       TF_VAR_principal_user_arn: ${{ vars.AWS_PRINCIPAL_USER_ARN }}
       TF_VAR_eks_lab_role_arn: ${{ vars.EKS_LAB_ROLE_ARN }}
       TF_VAR_lambda_function_name: ${{ vars.AUTH_FUNCTION_NAME }}
+      TF_VAR_rabbitmq_username: ${{ secrets.RABBITMQ_USERNAME }}
+      TF_VAR_rabbitmq_password: ${{ secrets.RABBITMQ_PASSWORD }}
 
     steps:
       - name: Checkout code
@@ -45,6 +47,6 @@ jobs:
 
       - name: Export Terraform outputs
         run: terraform output -json > outputs.json
-        
+
       - name: Upload outputs.json to S3
         run: aws s3 cp outputs.json s3://${{ vars.TF_BUCKET_NAME }}/outputs.json

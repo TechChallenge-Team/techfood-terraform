@@ -142,3 +142,43 @@ output "auth_lambda_artifacts_bucket_name" {
   value       = aws_s3_bucket.lambda_artifacts_bucket.id
   description = "S3 bucket where the CI pipeline should upload the Lambda package"
 }
+
+# ================================================================================
+# OUTPUTS DO RABBITMQ
+# ================================================================================
+
+output "rabbitmq_broker_id" {
+  description = "ID do RabbitMQ broker"
+  value       = aws_mq_broker.rabbitmq.id
+}
+
+output "rabbitmq_broker_arn" {
+  description = "ARN do RabbitMQ broker"
+  value       = aws_mq_broker.rabbitmq.arn
+}
+
+output "rabbitmq_broker_console_url" {
+  description = "URL do console de gerenciamento do RabbitMQ"
+  value       = "https://${aws_mq_broker.rabbitmq.instances[0].console_url}"
+}
+
+output "rabbitmq_amqp_endpoint" {
+  description = "Endpoint AMQP do RabbitMQ (porta 5672)"
+  value       = aws_mq_broker.rabbitmq.instances[0].endpoints[0]
+}
+
+output "rabbitmq_amqps_endpoint" {
+  description = "Endpoint AMQPS do RabbitMQ (porta 5671)"
+  value       = aws_mq_broker.rabbitmq.instances[0].endpoints[1]
+}
+
+output "rabbitmq_connection_string" {
+  description = "String de conexão para uso no Kubernetes (use com credentials separadas)"
+  value       = "amqp://${aws_mq_broker.rabbitmq.instances[0].ip_address}:5672"
+  sensitive   = true
+}
+
+output "rabbitmq_host" {
+  description = "Host do RabbitMQ para configuração no Kubernetes"
+  value       = aws_mq_broker.rabbitmq.instances[0].ip_address
+}
