@@ -57,28 +57,3 @@ variable "lambda_timeout" {
   type    = number
   default = 30
 }
-
-# RabbitMQ Variables
-variable "rabbitmq_username" {
-  type        = string
-  description = "Username for RabbitMQ broker"
-  sensitive   = true
-}
-
-variable "rabbitmq_password" {
-  type        = string
-  description = "Password for RabbitMQ broker"
-  sensitive   = true
-}
-
-variable "rabbitmq_instance_type" {
-  type        = string
-  default     = "mq.t3.micro"
-  description = "Instance type for RabbitMQ broker"
-}
-
-variable "rabbitmq_engine_version" {
-  type        = string
-  default     = "3.13.3"
-  description = "RabbitMQ engine version"
-}
