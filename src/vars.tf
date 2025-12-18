@@ -57,6 +57,9 @@ variable "lambda_timeout" {
   type    = number
   default = 30
 }
+variable "lambda_artifacts_bucket_name" {
+  type    = string
+}
 
 # RabbitMQ Variables
 # variable "rabbitmq_username" {

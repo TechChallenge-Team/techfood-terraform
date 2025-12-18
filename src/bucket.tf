@@ -4,7 +4,7 @@
 #}
 
 resource "aws_s3_bucket" "lambda_artifacts_bucket" {
-  bucket        = "${var.projectName}-lambda-artifacts-bucket"
+  bucket        = var.lambda_artifacts_bucket_name
   force_destroy = true
 
   tags = merge(var.tags, {
