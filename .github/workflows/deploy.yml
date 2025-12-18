@@ -33,7 +33,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -backend-config="bucket=${{ vars.TF_BUCKET_NAME }}"
 
       - name: Terraform Validate
         run: terraform validate
